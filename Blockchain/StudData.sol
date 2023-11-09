@@ -1,39 +1,36 @@
-pragma solidity ^0.6.0;
-contract Crud {
-struct User {
-uint id;
-string name;
-}
-User[] public users;
-uint public nextId = 0;
-function Create(string memory name) public {
-users.push(User(nextId, name));
-nextId++;
-}
-function Read(uint id) view public returns(uint, string memory) {
-for(uint i=0; i<users.length; i++) {
-if(users[i].id == id) {
-return(users[i].id, users[i].name);
-}
-}
-}
-function Update(uint id, string memory name) public {
-for(uint i=0; i<users.length; i++) {
-if(users[i].id == id) {
-users[i].name =name;
-}
-}
-}
-function Delete(uint id) public {
-delete users[id];
-}
-function find(uint id) view internal returns(uint) {
-for(uint i=0; i< users.length; i++) {
-if(users[i].id == id) {
-return i;
-}
-}
-// if user does not exist then revert back
-revert("User does not exist");
-}
+pragma solidity >= 0.7.0;
+
+contract Student_management{
+
+	struct Student{
+		int stud_id;
+		string Name;
+		string Department;
+	}
+
+	Student[] Students;
+
+	function add_stud(int stud_id, string memory Name, string memory Department) public{
+		Student memory stud = Student(stud_id, Name, Department);
+		Students.push(stud);
+	}
+
+	function getStudent(int stud_id) public view returns(string memory, string memory){
+		for(uint i = 0; i < Students.length; i++){
+			Student memory stud = Students[i];
+			if(stud.stud_id == stud_id){
+				return(stud.Name, stud.Department);
+			}
+		}
+        return("Name Not Found", "Department Not Found");
+	}
+
+	    function getStudentsCount() public view returns (uint256) {
+        return Students.length;
+    }
+
+	//Fallback Function
+	fallback() external {
+        add_stud( 0,"Unknown", "CSE");
+    }
 }
